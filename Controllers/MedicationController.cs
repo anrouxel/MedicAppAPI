@@ -34,7 +34,6 @@ namespace MedicAppAPI.Controllers
         [DisableRequestSizeLimit]
         public async Task<ActionResult> AddAll(List<Medication> medications)
         {
-            _logger.LogInformation($"Adding {medications.Count} medications : {string.Join(", ", medications.Select(m => m.CISCode))}");
             await _medicationService.CreateAsync(medications);
             return new OkResult();
         }
@@ -44,7 +43,6 @@ namespace MedicAppAPI.Controllers
         public async Task<ActionResult> Get()
         {
             var medications = await _medicationService.GetAsync();
-            _logger.LogInformation($"Retrieved {medications.Count} medications");
             return new OkObjectResult(medications);
         }
 
@@ -53,12 +51,6 @@ namespace MedicAppAPI.Controllers
         public async Task<ActionResult> GetByCISCode(long CISCode)
         {
             var medication = await _medicationService.GetAsync(CISCode);
-            if (medication == null)
-            {
-                _logger.LogInformation($"No medication found for CISCode : {CISCode}");
-                return new NotFoundResult();
-            }
-            _logger.LogInformation($"Retrieved medication : {medication.CISCode}");
             return new OkObjectResult(medication);
         }
     }
