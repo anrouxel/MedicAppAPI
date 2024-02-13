@@ -39,12 +39,23 @@ namespace MedicAppAPI.Services
 
         public async Task CreateAsync(List<Medication> newMedications)
         {
-            await _medicationsCollection.InsertManyAsync(newMedications);
+            foreach (var medication in newMedications)
+            {
+                await CreateAsync(medication);
+            }
         }
 
         public async Task CreateAsync(Medication newBook)
         {
-            await _medicationsCollection.InsertOneAsync(newBook);
+            var existingMedication = await _medicationsCollection.AsQueryable().FirstOrDefaultAsync(m => m.CISCode == newBook.CISCode);
+            if (existingMedication != null)
+            {
+                await UpdateAsync(newBook.CISCode, newBook);
+            }
+            else
+            {
+                await _medicationsCollection.InsertOneAsync(newBook);
+            }
         }
 
         public async Task UpdateAsync(long CISCode, Medication updatedMedication)
