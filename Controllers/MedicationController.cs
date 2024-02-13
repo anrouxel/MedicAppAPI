@@ -55,6 +55,7 @@ namespace MedicAppAPI.Controllers
 
         [Route("[action]")]
         [HttpPost]
+        [DisableRequestSizeLimit]
         public async Task<ActionResult> UpdateDatabase(List<Medication> medications)
         {
             await _medicationService.ClearAsync();
