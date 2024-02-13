@@ -54,7 +54,7 @@ namespace MedicAppAPI.Controllers
         }
 
         [Route("[action]")]
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult> UpdateDatabase(List<Medication> medications)
         {
             await _medicationService.ClearAsync();
