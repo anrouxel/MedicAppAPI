@@ -39,23 +39,12 @@ namespace MedicAppAPI.Services
 
         public async Task CreateAsync(List<Medication> newMedications)
         {
-            foreach (var medication in newMedications)
-            {
-                await CreateAsync(medication);
-            }
+            await _medicationsCollection.InsertManyAsync(newMedications);
         }
 
         public async Task CreateAsync(Medication newBook)
         {
-            var existingMedication = await _medicationsCollection.AsQueryable().FirstOrDefaultAsync(m => m.CISCode == newBook.CISCode);
-            if (existingMedication != null)
-            {
-                await UpdateAsync(newBook.CISCode, newBook);
-            }
-            else
-            {
-                await _medicationsCollection.InsertOneAsync(newBook);
-            }
+            await _medicationsCollection.InsertOneAsync(newBook);
         }
 
         public async Task UpdateAsync(long CISCode, Medication updatedMedication)
@@ -66,6 +55,11 @@ namespace MedicAppAPI.Services
         public async Task RemoveAsync(long CISCode)
         {
             await _medicationsCollection.DeleteOneAsync(m => m.CISCode == CISCode);
+        }
+
+        public async Task ClearAsync()
+        {
+            await _medicationsCollection.DeleteManyAsync(FilterDefinition<Medication>.Empty);
         }
     }
 }

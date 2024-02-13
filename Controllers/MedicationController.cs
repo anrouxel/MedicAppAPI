@@ -24,7 +24,6 @@ namespace MedicAppAPI.Controllers
         [HttpPost]
         public async Task<ActionResult> Add(Medication medication)
         {
-            _logger.LogInformation($"Adding medication : {medication.CISCode}");
             await _medicationService.CreateAsync(medication);
             return new OkResult();
         }
@@ -52,6 +51,15 @@ namespace MedicAppAPI.Controllers
         {
             var medication = await _medicationService.GetAsync(CISCode);
             return new OkObjectResult(medication);
+        }
+
+        [Route("[action]")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateDatabase(List<Medication> medications)
+        {
+            await _medicationService.ClearAsync();
+            await _medicationService.CreateAsync(medications);
+            return new OkResult();
         }
     }
 }
